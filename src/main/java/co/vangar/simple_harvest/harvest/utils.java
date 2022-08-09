@@ -1,10 +1,13 @@
 package co.vangar.simple_harvest.harvest;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,37 +23,61 @@ public class utils {
         return ran.nextInt(max);
     }
 
-    public static ItemMeta durabilityDmg(ItemStack item){
+    public static boolean canBreakAll(ItemStack item, int i){
         ItemMeta im = item.getItemMeta();
         Damageable dam = (Damageable) im;
 
-        int ranI = getRandomInt(100);
-        boolean doDmg = true;
+        if(dam.hasDamage()){
+            int maxDur = item.getType().getMaxDurability();
+            int currentDur = maxDur - dam.getDamage();
 
-        if(im.hasEnchants()) {
-            if(im.hasEnchant(Enchantment.DURABILITY)){
-                int unbreaking = im.getEnchantLevel(Enchantment.DURABILITY);
-                if(unbreaking == 1){
-                    if(ranI <= 20){
-                        doDmg = false;
-                    }
-                } else if(unbreaking == 2){
-                    if(ranI <= 27){
-                        doDmg = false;
-                    }
-                } else if(unbreaking == 3){
-                    if(ranI <= 30){
-                        doDmg = false;
+
+            if(currentDur > i) return true;
+            else return false;
+        } else return true;
+    }
+
+    public static void durabilityDmg(Player p){
+        if(p.getGameMode() != GameMode.CREATIVE){
+            ItemStack item = p.getInventory().getItemInMainHand();
+            Damageable dam = (Damageable) item.getItemMeta();
+
+            int maxDur = item.getType().getMaxDurability();
+            int currentDur = maxDur - dam.getDamage();
+
+            int ranI = getRandomInt(100);
+            boolean doDmg = true;
+
+            if(dam.hasEnchants()) {
+                if(dam.hasEnchant(Enchantment.DURABILITY)){
+                    int unbreaking = dam.getEnchantLevel(Enchantment.DURABILITY);
+                    if(unbreaking == 1){
+                        if(ranI <= 20){
+                            doDmg = false;
+                        }
+                    } else if(unbreaking == 2){
+                        if(ranI <= 27){
+                            doDmg = false;
+                        }
+                    } else if(unbreaking == 3){
+                        if(ranI <= 30){
+                            doDmg = false;
+                        }
                     }
                 }
             }
-        }
 
-        if(doDmg){
-            dam.setDamage(dam.getDamage() + 1);
+            if(doDmg){
+                if(currentDur - 1 < 1){
+                    p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+                    p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                } else {
+                    dam.setDamage(dam.getDamage() + 1);
+                    item.setItemMeta(dam);
+                    p.getInventory().setItemInMainHand(item);
+                }
+            }
         }
-
-        return dam;
     }
 
     public static double fortuneMulti(int fortuneLevel){

@@ -1,5 +1,6 @@
 package co.vangar.simple_harvest.harvest;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -36,15 +37,26 @@ public class listener implements Listener {
                         List<Block> field = new ArrayList<Block>();
                         field.addAll(utils.harvestArea(block));
 
-                        for(Block b : field){
-                            Collection<ItemStack> drops = b.getDrops();
-                            Location loc = b.getLocation();
+                        if(utils.canBreakAll(p.getInventory().getItemInMainHand(), field.size())){
+                            for(Block b : field){
+                                Collection<ItemStack> drops = b.getDrops();
+                                Location loc = b.getLocation();
+                                for(ItemStack is : drops){
+                                    is.setAmount((int) (is.getAmount() * utils.fortuneMulti(fortune)));
+                                    p.getWorld().dropItem(loc, is);
+                                }
+                                b.setType(b.getType());
+                                utils.durabilityDmg(p);
+                            }
+                        } else if(utils.isHarvestable(block)){
+                            Collection<ItemStack> drops = block.getDrops();
+                            Location loc = block.getLocation();
                             for(ItemStack is : drops){
                                 is.setAmount((int) (is.getAmount() * utils.fortuneMulti(fortune)));
                                 p.getWorld().dropItem(loc, is);
                             }
-                            b.setType(b.getType());
-                            p.getInventory().getItemInMainHand().setItemMeta(utils.durabilityDmg(p.getInventory().getItemInMainHand()));
+                            block.setType(block.getType());
+                            utils.durabilityDmg(p);
                         }
                     }
                 } else {
@@ -56,7 +68,7 @@ public class listener implements Listener {
                             p.getWorld().dropItem(loc, is);
                         }
                         block.setType(block.getType());
-                        p.getInventory().getItemInMainHand().setItemMeta(utils.durabilityDmg(p.getInventory().getItemInMainHand()));
+                        utils.durabilityDmg(p);
                     }
                 }
             }
