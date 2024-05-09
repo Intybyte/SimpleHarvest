@@ -70,10 +70,7 @@ public class CropListener implements Listener {
             p.getWorld().dropItem(loc, is);
         }
 
-        if (SimpleHarvest.mcMMO) {
-            int xp = ExperienceConfig.getInstance().getXp(PrimarySkillType.HERBALISM, block);
-            ExperienceAPI.addRawXP(p, "Herbalism", xp);
-        }
+        addMcMMOxp(p, block);
 
         block.setType(block.getType());
         HarvestUtils.durabilityDmg(p);
@@ -105,6 +102,7 @@ public class CropListener implements Listener {
                     is.setAmount((int) (is.getAmount() * HarvestUtils.fortuneMulti(fortune)));
                     p.getWorld().dropItem(loc, is);
                 }
+                addMcMMOxp(p, block);
                 b.setType(b.getType());
                 HarvestUtils.durabilityDmg(p);
             }
@@ -122,9 +120,19 @@ public class CropListener implements Listener {
             is.setAmount((int) (is.getAmount() * HarvestUtils.fortuneMulti(fortune)));
             p.getWorld().dropItem(loc, is);
         }
+        addMcMMOxp(p, block);
         block.setType(block.getType());
         HarvestUtils.durabilityDmg(p);
-        return true;
 
+        return true;
+    }
+
+    private void addMcMMOxp(Player p, Block block) {
+        if (!SimpleHarvest.mcMMO) {
+            return;
+        }
+
+        int xp = ExperienceConfig.getInstance().getXp(PrimarySkillType.HERBALISM, block);
+        ExperienceAPI.addRawXP(p, "Herbalism", xp);
     }
 }
