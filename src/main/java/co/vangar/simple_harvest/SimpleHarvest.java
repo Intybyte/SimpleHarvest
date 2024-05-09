@@ -11,9 +11,11 @@ import java.io.File;
 public final class SimpleHarvest extends JavaPlugin {
 
     public static ExperienceConfig exp = null;
+    public static JavaPlugin instance;
 
     @Override
     public void onEnable() {
+        instance = this;
         FileConfiguration config = this.getConfig();
 
         getDataFolder().mkdirs();

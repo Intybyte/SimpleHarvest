@@ -4,6 +4,7 @@ import co.vangar.simple_harvest.SimpleHarvest;
 import co.vangar.simple_harvest.utils.ConfigStorage;
 import co.vangar.simple_harvest.utils.HarvestUtils;
 import com.gmail.nossr50.api.ExperienceAPI;
+import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
 import com.gmail.nossr50.config.experience.ExperienceConfig;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import org.bukkit.Location;
@@ -133,6 +134,11 @@ public class CropListener implements Listener {
         }
 
         int xp = SimpleHarvest.exp.getXp(PrimarySkillType.HERBALISM, block);
-        ExperienceAPI.addRawXP(p, "Herbalism", xp);
+
+        try {
+            ExperienceAPI.addRawXP(p, "Herbalism", xp);
+        } catch (McMMOPlayerNotFoundException e) {
+            SimpleHarvest.instance.getLogger().warning(p.getName() + "'s profile wasn't loaded yet. So xp wasn't awarded [Not a bug don't worry]");
+        }
     }
 }
