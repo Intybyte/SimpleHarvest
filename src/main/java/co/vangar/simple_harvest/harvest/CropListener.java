@@ -128,11 +128,11 @@ public class CropListener implements Listener {
     }
 
     private void addMcMMOxp(Player p, Block block) {
-        if (!SimpleHarvest.mcMMO) {
+        if (SimpleHarvest.exp == null) {
             return;
         }
 
-        int xp = ExperienceConfig.getInstance().getXp(PrimarySkillType.HERBALISM, block);
+        int xp = SimpleHarvest.exp.getXp(PrimarySkillType.HERBALISM, block);
         ExperienceAPI.addRawXP(p, "Herbalism", xp);
     }
 }
