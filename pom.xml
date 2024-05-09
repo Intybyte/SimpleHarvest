@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>co.vangar</groupId>
-    <artifactId>simple_harvest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>SimpleHarvestPlus</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>Simple Harvest</name>
@@ -16,7 +16,6 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>https://vangar.co/</url>
 
     <build>
         <plugins>

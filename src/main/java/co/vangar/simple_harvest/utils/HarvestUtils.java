@@ -49,10 +49,8 @@ public class HarvestUtils {
         ItemStack item = p.getInventory().getItemInMainHand();
         ItemMeta meta = item.getItemMeta();
 
-        if(!(meta instanceof Damageable))
+        if(!(meta instanceof Damageable dam))
             return;
-
-        Damageable dam = (Damageable) meta;
 
         int maxDur = item.getType().getMaxDurability();
         int currentDur = maxDur - dam.getDamage();
