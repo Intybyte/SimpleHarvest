@@ -5,7 +5,6 @@ import co.vangar.simple_harvest.utils.ConfigStorage;
 import co.vangar.simple_harvest.utils.HarvestUtils;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
-import com.gmail.nossr50.config.experience.ExperienceConfig;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -71,10 +70,7 @@ public class CropListener implements Listener {
             p.getWorld().dropItem(loc, is);
         }
 
-        addMcMMOxp(p, block);
-
-        block.setType(block.getType());
-        HarvestUtils.durabilityDmg(p);
+        harvestBlock(p, block);
     }
 
     private boolean checkAreaHarvest(Player p, Block block, int fortune) {
@@ -103,9 +99,7 @@ public class CropListener implements Listener {
                     is.setAmount((int) (is.getAmount() * HarvestUtils.fortuneMulti(fortune)));
                     p.getWorld().dropItem(loc, is);
                 }
-                addMcMMOxp(p, block);
-                b.setType(b.getType());
-                HarvestUtils.durabilityDmg(p);
+                harvestBlock(p, block);
             }
 
             return true;
@@ -121,9 +115,7 @@ public class CropListener implements Listener {
             is.setAmount((int) (is.getAmount() * HarvestUtils.fortuneMulti(fortune)));
             p.getWorld().dropItem(loc, is);
         }
-        addMcMMOxp(p, block);
-        block.setType(block.getType());
-        HarvestUtils.durabilityDmg(p);
+        harvestBlock(p, block);
 
         return true;
     }
@@ -140,5 +132,11 @@ public class CropListener implements Listener {
         } catch (McMMOPlayerNotFoundException e) {
             SimpleHarvest.instance.getLogger().warning(p.getName() + "'s profile wasn't loaded yet. So xp wasn't awarded [Not a bug don't worry]");
         }
+    }
+
+    private void harvestBlock(Player p, Block block) {
+        addMcMMOxp(p, block);
+        block.setType(block.getType());
+        HarvestUtils.durabilityDmg(p);
     }
 }
