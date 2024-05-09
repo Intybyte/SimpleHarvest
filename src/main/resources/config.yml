@@ -1,0 +1,6 @@
+# Is holding a hoe in the main hand required?
+requires-hoe: false
+# Do diamond and netherite hoes harvest in a 3x3 area
+area-harvest: false
+# Does the harvest tool if any get damaged?
+durability-damage: true
